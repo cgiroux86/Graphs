@@ -1,6 +1,27 @@
+import random
+
+
+class Queue:
+    def __init__(self):
+        self.queue = []
+
+    def enqueue(self, value):
+        self.queue.append(value)
+
+    def dequeue(self):
+        if self.size() > 0:
+            return self.queue.pop(0)
+        else:
+            return None
+
+    def size(self):
+        return len(self.queue)
+
+
 class User:
     def __init__(self, name):
         self.name = name
+
 
 class SocialGraph:
     def __init__(self):
@@ -43,6 +64,14 @@ class SocialGraph:
         self.users = {}
         self.friendships = {}
         # !!!! IMPLEMENT ME
+        for i in range(1, num_users):
+            self.add_user(i)
+        friends_list = list(self.friendships)
+        for f in friends_list:
+            for idx in range(avg_friendships):
+                random.shuffle(friends_list)
+                if f < friends_list[idx] and friends_list[idx] not in self.friendships[f]:
+                    self.add_friendship(friends_list[idx], f)
 
         # Add users
 
@@ -59,6 +88,25 @@ class SocialGraph:
         """
         visited = {}  # Note that this is a dictionary, not a set
         # !!!! IMPLEMENT ME
+        q = Queue()
+        for u in self.friendships[user_id]:
+            print('u', u)
+            q.enqueue([user_id, u])
+            visited[u] = [user_id, u]
+        while q.size():
+            path = q.dequeue()
+            vertex = path[-1]
+            print('path', path, 'vertex', vertex, user_id)
+            if vertex not in visited:
+                visited[vertex] = None
+            elif vertex == user_id:
+                print(vertex, user_id)
+                visited[vertex] = path
+            elif vertex not in path:
+                new_path = list(path)
+                new_path.append(vertex)
+                print('new', new_path)
+
         return visited
 
 

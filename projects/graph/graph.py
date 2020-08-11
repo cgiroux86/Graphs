@@ -23,16 +23,23 @@ class Graph:
         """
         Add a directed edge to the graph.
         """
-        if v1 in self.vertices and v2 in self.vertices:
+        if v1 in self.vertices:
             self.vertices[v1].add(v2)
         else:
-            raise IndexError('vertex not found')
+            self.vertices[v1] = v2
+        # if v1 in self.vertices and v2 in self.vertices:
+        #     self.vertices[v1].add(v2)
+        # else:
+        #     raise IndexError('vertex not found')
 
     def get_neighbors(self, vertex_id):
         """
         Get all neighbors (edges) of a vertex.
         """
-        return self.vertices[vertex_id]
+        try:
+            return self.vertices[vertex_id]
+        except KeyError:
+            return []
 
     def bft(self, starting_vertex):
         """
@@ -143,7 +150,22 @@ class Graph:
 
         This should be done using recursion.
         """
-        pass  # TODO
+
+    def isolated_edges(self):
+        graph = self.vertices
+        iso_edges = []
+        for vertex in graph:
+            print(vertex, 'vertex')
+            if not graph[vertex]:
+                iso_edges.append([vertex])
+        return iso_edges
+
+    def find_parents(self, starting_vertex):
+        n = []
+        print('vertices', self.vertices)
+        for vertex, neighbors in self.vertices.items():
+            n.extend((x for x in neighbors))
+        return n
 
 
 if __name__ == '__main__':
