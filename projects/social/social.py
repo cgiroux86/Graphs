@@ -89,30 +89,26 @@ class SocialGraph:
         visited = {}  # Note that this is a dictionary, not a set
         # !!!! IMPLEMENT ME
         q = Queue()
-        for u in self.friendships[user_id]:
-            print('u', u)
-            q.enqueue([user_id, u])
-            visited[u] = [user_id, u]
+        q.enqueue([user_id])
         while q.size():
             path = q.dequeue()
             vertex = path[-1]
-            print('path', path, 'vertex', vertex, user_id)
             if vertex not in visited:
                 visited[vertex] = None
-            elif vertex == user_id:
-                print(vertex, user_id)
+            if vertex in visited and not visited[vertex]:
                 visited[vertex] = path
-            elif vertex not in path:
-                new_path = list(path)
-                new_path.append(vertex)
-                print('new', new_path)
+                for friend in self.friendships[vertex]:
+                    if friend not in path:
+                        new_path = list(path)
+                        new_path.append(friend)
+                        q.enqueue(new_path)
 
         return visited
 
 
 if __name__ == '__main__':
     sg = SocialGraph()
-    sg.populate_graph(10, 2)
+    sg.populate_graph(20, 5)
     print(sg.friendships)
     connections = sg.get_all_social_paths(1)
     print(connections)

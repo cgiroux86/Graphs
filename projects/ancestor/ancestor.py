@@ -1,6 +1,7 @@
 import sys
 import os
 sys.path.append(f'{os.getcwd()}/graph')
+print(sys.path)
 from graph import Graph
 
 
