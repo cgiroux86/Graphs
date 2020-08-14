@@ -5,6 +5,7 @@ from world import World
 import random
 from ast import literal_eval
 import os
+dirpath = os.path.dirname(os.path.abspath(__file__))
 
 
 # class Queue():
@@ -33,7 +34,7 @@ world = World()
 # map_file = "maps/test_cross.txt"
 # map_file = "maps/test_loop.txt"
 # map_file = "maps/test_loop_fork.txt"
-map_file = f"{os.getcwd()}/projects/adventure/maps/main_maze.txt"
+map_file = f"{dirpath}/maps/main_maze.txt"
 
 # Loads the map into a dictionary
 room_graph = literal_eval(open(map_file, "r").read())
@@ -64,11 +65,13 @@ def add_edge(direction):
         return 'n'
 
 
-def traverse_maze(starting_room, visited=set(), path=[]):
+def traverse_maze(starting_room, visited=set(), path=[], prevdir=None):
     if len(visited) == 499:
         res.extend(path)
         return
     exits = starting_room.get_exits()
+    if prevdir:
+        exits.remove(add_edge(prevdir))
     curr_room = starting_room.id
     graph[curr_room] = {}
     visited.add(starting_room.id)
@@ -78,7 +81,7 @@ def traverse_maze(starting_room, visited=set(), path=[]):
         path.append(e)
         graph[curr_room][e] = player.current_room.id
         if player.current_room.id not in visited:
-            traverse_maze(player.current_room, visited, path)
+            traverse_maze(player.current_room, visited, path, e)
             player.travel(add_edge(e))
             path.append(add_edge(e))
         else:
